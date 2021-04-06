@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         WebView myWebView = findViewById(R.id.my_webview);
+        WebSettings webSettings = myWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
 
         /*
         * Rename your App. Tip: Values->Strings

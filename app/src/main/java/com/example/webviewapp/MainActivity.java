@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
-
+        WebViewClient MyWebViewClient = new WebViewClient();
+        myWebView.setWebViewClient(MyWebViewClient);
 
         /*
         * Rename your App. Tip: Values->Strings

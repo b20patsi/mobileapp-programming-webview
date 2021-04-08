@@ -1,42 +1,64 @@
-
-# Rapport
-
-**Skriv din rapport här!**
-
-_Du kan ta bort all text som finns sedan tidigare_.
-
-## Följande grundsyn gäller dugga-svar:
-
-- Ett kortfattat svar är att föredra. Svar som är längre än en sida text (skärmdumpar och programkod exkluderat) är onödigt långt.
-- Svaret skall ha minst en snutt programkod.
-- Svaret skall inkludera en kort övergripande förklarande text som redogör för vad respektive snutt programkod gör eller som svarar på annan teorifråga.
-- Svaret skall ha minst en skärmdump. Skärmdumpar skall illustrera exekvering av relevant programkod. Eventuell text i skärmdumpar måste vara läsbar.
-- I de fall detta efterfrågas, dela upp delar av ditt svar i för- och nackdelar. Dina för- respektive nackdelar skall vara i form av punktlistor med kortare stycken (3-4 meningar).
-
-Programkod ska se ut som exemplet nedan. Koden måste vara korrekt indenterad då den blir lättare att läsa vilket gör det lättare att hitta syntaktiska fel.
+I kodstycket nedan så skapas det en ny web view som identifierar ett sätt att öppna
+hemsidor på i appen. Detta gör så att vi kan använda oss av både internal och external hemsidor för
+att visa de i appen som byggts.
 
 ```
-function errorCallback(error) {
-    switch(error.code) {
-        case error.PERMISSION_DENIED:
-            // Geolocation API stöds inte, gör något
-            break;
-        case error.POSITION_UNAVAILABLE:
-            // Misslyckat positionsanrop, gör något
-            break;
-        case error.UNKNOWN_ERROR:
-            // Okänt fel, gör något
-            break;
-    }
+<WebView
+        android:id="@+id/my_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp" />
+```
+
+Nedan i första delen av kodstycket så använder vi oss av web viewn som skapats och kopplar ihop de
+via id my_webview. Appen vet då vad den ska använda sig av för funktion för att visa en hemsida i
+appen. I andra delen av kodstycket så använder vi oss av en egen web client vilket då gör att när
+vi besöker en external hemsida så går det ej att skriva in en egen URL utan det går endast att
+navigera på den hemsidan som besöks. I bilden under koden så ser vi att det ej finns något URL-fält
+vilket gör då att användaren ej fritt kan besöka andra hemsidor.
+
+```
+myWebView = findViewById(R.id.my_webview);
+WebSettings webSettings = myWebView.getSettings();
+webSettings.setJavaScriptEnabled(true);
+
+WebViewClient MyWebViewClient = new WebViewClient();
+myWebView.setWebViewClient(MyWebViewClient);
+```
+
+![](externalWeb.jpg)
+
+I vår meny i appen går det att besöka en external och en internal hemsida. I koden nedan så finns
+det två if-satser där det generar olika kod beroende på vilken av de två sidorna man vill besöka.
+I if-satserna så hänvisar de till en funktion som ska köras när respektive knapp trycks på. När
+den external hemsidan ska visas så körs den första funktionen där den då laddar en URL som i detta
+fallet är https://his.se vilket gör att användaren kommer in på his.se via appen. Hemsidan öppnas
+inte i en ny browser utan stannar kvar i appen. När användaren öppnar internal hemsida så laddas
+en URL in som hänvisar att html-dokumentet befinner sig i en specifik mapp. Under koden kan vi se
+bilder på först den interna hemsidan och sedan den externa hemsidan.
+
+```
+if (id == R.id.action_external_web) {
+    Log.d("==>", "Will display external web page");
+    showExternalWebPage();
+    return true;
+}
+
+if (id == R.id.action_internal_web) {
+    Log.d("==>", "Will display internal web page");
+    showInternalWebPage();
+    return true;
+}
+
+public void showExternalWebPage() {
+    myWebView.loadUrl("https://his.se");
+}
+
+public void showInternalWebPage() {
+    myWebView.loadUrl("file:///android_asset/index.html");
 }
 ```
 
-Bilder läggs i samma mapp som markdown-filen.
+![](internalWeb.jpg)
 
-![](android.png)
-
-Läs gärna:
-
-- Boulos, M.N.K., Warren, J., Gong, J. & Yue, P. (2010) Web GIS in practice VIII: HTML5 and the canvas element for interactive online mapping. International journal of health geographics 9, 14. Shin, Y. &
-- Wunsche, B.C. (2013) A smartphone-based golf simulation exercise game for supporting arthritis patients. 2013 28th International Conference of Image and Vision Computing New Zealand (IVCNZ), IEEE, pp. 459–464.
-- Wohlin, C., Runeson, P., Höst, M., Ohlsson, M.C., Regnell, B., Wesslén, A. (2012) Experimentation in Software Engineering, Berlin, Heidelberg: Springer Berlin Heidelberg.
+![](externalWeb.jpg)
